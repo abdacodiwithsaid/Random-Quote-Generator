@@ -1,0 +1,78 @@
+/* Open Sans Font Family */
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+
+body {
+  width: 100vw;
+  height: 100vh;
+  font-family: "Open Sans", sans-serif;
+  background-color: #eee;
+  background-image: url(../img/bg-image.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.container {
+  width: 30%;
+  min-width: 850px;
+  margin: 6rem auto;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+blockquote {
+  font-style: italic;
+  font-size: 1.4rem;
+  margin: 80px 0;
+  color: #555555;
+  padding: 1.2em 30px 1.2em 75px;
+  border-left: 8px solid #00a2c9;
+  line-height: 1.6;
+  position: relative;
+  background-color: white;
+}
+
+blockquote::before {
+  font-family: Arial;
+  content: "\201C";
+  color: #00a2c9;
+  font-size: 4em;
+  position: absolute;
+  left: 10px;
+  top: -10px;
+}
+
+blockquote::after {
+  content: "";
+}
+
+blockquote cite {
+  display: block;
+  color: #333333;
+  font-weight: 700;
+  margin-top: 1em;
+  text-align: right;
+}
+
+button {
+  align-self: flex-end;
+
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #00a2c9;
+  border: 2px solid #00a2c9;
+  border-radius: 0.25em;
+  padding: 0.5em 1em;
+  transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
+
+button:hover {
+  background-color: #ffffff;
+  color: #0088cc;
+  cursor: pointer;
+}
