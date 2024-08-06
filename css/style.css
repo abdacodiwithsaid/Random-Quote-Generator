@@ -54,12 +54,9 @@ blockquote::after {
 
 cite {
   align-self: flex-end;
-  font-family: inherit;
   font-size: 1.4rem;
   font-weight: 300;
-  color: #333333;
-  margin-bottom: 3rem;
-  color: #00a2c9;
+  color: #ecc636;
 }
 
 button {
