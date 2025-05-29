@@ -10,12 +10,11 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  overflow: hidden;
 }
 
 .container {
-  width: 30%;
-  min-width: 850px;
+  width: 80%;
+  max-width: 850px;
   margin: 6rem auto;
 
   display: flex;
@@ -60,9 +59,7 @@ cite {
 }
 
 button {
-  position: fixed;
-  top: 50%;
-  align-self: flex-end;
+  margin-top: 20px; /* Added to position below author */
   font-size: 1.4rem;
   font-weight: 600;
   color: #ffffff;
