@@ -70,12 +70,24 @@ const quoteSource = [
 
 // Select DOM elements
 const generateBtn = document.getElementById("generate");
-const quoteElt = document.getElementById("b-quote");
+const quoteElt = document.getElementById("quote-text");
 const authorElt = document.getElementById("author");
 
 // Callback function
+let lastQuoteIndex = -1;
+
 function displayNewQuote() {
-  const randNumber = Math.floor(Math.random() * quoteSource.length);
+  if (!quoteSource || quoteSource.length === 0) {
+    quoteElt.textContent = "No quotes available at the moment.";
+    authorElt.textContent = "";
+    return;
+  }
+
+  let randNumber = Math.floor(Math.random() * quoteSource.length);
+  while (randNumber === lastQuoteIndex) {
+    randNumber = Math.floor(Math.random() * quoteSource.length);
+  }
+  lastQuoteIndex = randNumber;
   const randQuote = quoteSource[randNumber];
 
   quoteElt.textContent = randQuote.quote;

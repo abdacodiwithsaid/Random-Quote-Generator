@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote Generator Tests</title>
+    <!-- The main script that will be tested -->
+    <script src="js/script.js" defer></script>
+</head>
+<body>
+    <h1>Quote Generator Test Page</h1>
+    <p>Open the browser console to see test results.</p>
+
+    <!-- Minimal HTML elements for script.js -->
+    <blockquote id="quote-text"></blockquote>
+    <cite id="author"></cite>
+    <button id="generate">Next Quote</button>
+
+    <script>
+        // Test Logic
+        function runTests() {
+            console.log("Starting tests...");
+
+            // Helper function to get current quote and author
+            const getCurrentQuote = () => ({
+                quote: document.getElementById('quote-text').textContent,
+                author: document.getElementById('author').textContent
+            });
+
+            // Test 1: Initial quote display
+            // displayNewQuote() is called automatically when script.js loads
+            // So, we can check the initial state right away.
+            // However, to be sure, especially with 'defer', we wait for DOMContentLoaded
+            
+            let initialQuoteData = getCurrentQuote();
+            console.log("Initial quote:", initialQuoteData.quote);
+            console.log("Initial author:", initialQuoteData.author);
+
+            if (initialQuoteData.quote && initialQuoteData.quote !== "No quotes available at the moment.") {
+                console.log("Test 1.1 Passed: Initial quote is displayed.");
+            } else {
+                console.error("Test 1.1 Failed: Initial quote is not displayed or not available.");
+            }
+
+            if (initialQuoteData.author && initialQuoteData.author.startsWith("~ ")) {
+                console.log("Test 1.2 Passed: Initial author is displayed correctly.");
+            } else {
+                console.error("Test 1.2 Failed: Initial author is not displayed or format is incorrect.");
+            }
+
+            // Test 2: Quote changes after button click (or direct call)
+            const generateButton = document.getElementById('generate');
+            let previousQuote = initialQuoteData.quote;
+            let previousAuthor = initialQuoteData.author;
+
+            // Simulate a few clicks
+            const clickCount = (typeof quoteSource !== 'undefined' && quoteSource.length > 0) ? quoteSource.length + 5 : 10; // Stress test
+            console.log(`Simulating ${clickCount} quote changes...`);
+
+            for (let i = 0; i < clickCount; i++) {
+                // Store current quote before changing
+                const quoteBeforeClick = document.getElementById('quote-text').textContent;
+                
+                generateButton.click(); // Or call displayNewQuote() directly if preferred
+                                        // displayNewQuote(); 
+
+                const quoteAfterClick = document.getElementById('quote-text').textContent;
+
+                if (i < (clickCount -1) && quoteSource && quoteSource.length > 1) { // Don't check for the very last click in this loop
+                    if (quoteBeforeClick !== quoteAfterClick) {
+                        // This is a soft check, as the last quote might be the same if we cycle through all unique ones
+                        // and the next random one happens to be the same as the one before this click.
+                        // The logic in script.js should prevent *immediate* duplicates.
+                        // console.log(`Debug: Quote before: "${quoteBeforeClick}", Quote after: "${quoteAfterClick}"`);
+                    } else if (quoteBeforeClick && quoteAfterClick) {
+                        // This might happen if quoteSource has only 1 item, or by chance if not for the anti-repeat logic
+                        // console.warn(`Warning: Quote did not change after click ${i+1}. Before: "${quoteBeforeClick}", After: "${quoteAfterClick}"`);
+                    }
+                }
+                 // Check non-duplication for consecutive calls (if quoteSource has more than one item)
+                if (quoteSource && quoteSource.length > 1) {
+                    if (document.getElementById('quote-text').textContent !== previousQuote) {
+                        // console.log(`Test (intermediate) Passed: Quote ${i+1} is different from previous.`);
+                    } else if (document.getElementById('quote-text').textContent && previousQuote) {
+                         console.error(`Test (intermediate) Failed: Quote ${i+1} is THE SAME AS PREVIOUS. Current: "${document.getElementById('quote-text').textContent}", Previous: "${previousQuote}"`);
+                    }
+                }
+                previousQuote = document.getElementById('quote-text').textContent; // Update for the next iteration's check
+            }
+
+            let finalQuoteData = getCurrentQuote();
+            console.log("Final quote after multiple changes:", finalQuoteData.quote);
+            console.log("Final author after multiple changes:", finalQuoteData.author);
+
+            if (finalQuoteData.quote && finalQuoteData.quote !== "No quotes available at the moment.") {
+                console.log("Test 2.1 Passed: Final quote is displayed.");
+            } else {
+                console.error("Test 2.1 Failed: Final quote is not displayed or not available.");
+            }
+
+            if (finalQuoteData.author && finalQuoteData.author.startsWith("~ ")) {
+                console.log("Test 2.2 Passed: Final author is displayed correctly.");
+            } else {
+                console.error("Test 2.2 Failed: Final author is not displayed or format is incorrect.");
+            }
+
+            // Test 3: Check if quote actually changed from initial (if quoteSource has multiple items)
+            if (typeof quoteSource !== 'undefined' && quoteSource.length > 1) {
+                if (initialQuoteData.quote !== finalQuoteData.quote) {
+                    console.log("Test 3.1 Passed: Quote content changed after multiple generations.");
+                } else {
+                    console.warn("Test 3.1 Warning: Quote content is the same as initial after multiple generations. This might be by chance if the list is short or due to an issue.");
+                }
+            } else if (typeof quoteSource !== 'undefined' && quoteSource.length === 1) {
+                 console.log("Test 3.1 Info: Only one quote in source, so quote content will not change.");
+            }
+
+
+            // Test 4: Non-consecutive quote check (simplified)
+            // Call displayNewQuote() one more time and check it's different from the current 'finalQuoteData.quote'
+            // This relies on lastQuoteIndex in script.js
+            if (typeof quoteSource !== 'undefined' && quoteSource.length > 1) {
+                const beforeLastClickQuote = finalQuoteData.quote;
+                generateButton.click(); // displayNewQuote();
+                const afterLastClickQuoteData = getCurrentQuote();
+
+                if (afterLastClickQuoteData.quote !== beforeLastClickQuote) {
+                    console.log("Test 4.1 Passed: Quote changed after one more click (non-consecutive check).");
+                } else {
+                    console.error("Test 4.1 Failed: Quote DID NOT change after one more click. Potential issue with non-consecutive logic. Before: "+ beforeLastClickQuote + " After: " + afterLastClickQuoteData.quote);
+                }
+            }
+
+            console.log("Tests completed.");
+        }
+
+        // Run tests after the DOM is fully loaded and script.js has likely run its initial displayNewQuote
+        document.addEventListener('DOMContentLoaded', () => {
+            // A small delay to ensure deferred scripts, including script.js and its initial call, have completed.
+            setTimeout(runTests, 100); 
+        });
+    </script>
+</body>
+</html>
